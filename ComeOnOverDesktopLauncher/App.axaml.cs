@@ -140,7 +140,6 @@ public partial class App : Application
         services.AddSingleton<ISlotInitialiser, SlotInitialiser>();
         services.AddSingleton<ISettingsService, SettingsService>();
         services.AddSingleton(provider => provider.GetRequiredService<ISettingsService>().Load());
-        services.AddSingleton<IComeOnOverAppService, ComeOnOverAppService>();
         services.AddSingleton<IResourceMonitor, ResourceMonitor>();
         services.AddSingleton<IClaudeDiskUsageService, ClaudeDiskUsageService>();
         services.AddSingleton<IStartupService, StartupService>();
