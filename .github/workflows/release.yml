@@ -30,7 +30,7 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Run tests
-        run: dotnet test ComeOnOverDesktopLauncher.Tests/ComeOnOverDesktopLauncher.Tests.csproj --configuration Release
+        run: dotnet test ClaudeDesktopLauncher.Tests/ClaudeDesktopLauncher.Tests.csproj --configuration Release
 
       - name: Install Velopack CLI
         # `vpk` is the Velopack packaging tool. We use it to produce the
@@ -50,7 +50,7 @@ jobs:
         # release onwards, this step succeeds and populates Releases/.
         run: |
           vpk download github `
-            --repoUrl https://github.com/LewisIsWorking/ComeOnOverDesktopLauncher `
+            --repoUrl https://github.com/LewisIsWorking/ClaudeDesktopLauncher `
             --token ${{ secrets.GITHUB_TOKEN }}
         continue-on-error: true
 
@@ -70,7 +70,7 @@ jobs:
         # delta-update format). Self-contained stays true so end users
         # don't need .NET installed.
         run: |
-          dotnet publish ComeOnOverDesktopLauncher/ComeOnOverDesktopLauncher.csproj `
+          dotnet publish ClaudeDesktopLauncher/ClaudeDesktopLauncher.csproj `
             --configuration Release `
             --runtime win-x64 `
             --self-contained true `
@@ -84,11 +84,11 @@ jobs:
         # v1.10.0 design decisions.
         run: |
           vpk pack `
-            --packId ComeOnOverDesktopLauncher `
+            --packId ClaudeDesktopLauncher `
             --packVersion ${{ steps.version.outputs.version }} `
             --packDir publish `
-            --mainExe ComeOnOverDesktopLauncher.exe `
-            --packTitle "ComeOnOver Desktop Launcher" `
+            --mainExe ClaudeDesktopLauncher.exe `
+            --packTitle "Claude Desktop Launcher" `
             --shortcuts "Desktop,StartMenu"
 
       - name: Upload to GitHub Releases
@@ -99,10 +99,10 @@ jobs:
         # explicitly.
         run: |
           vpk upload github `
-            --repoUrl https://github.com/LewisIsWorking/ComeOnOverDesktopLauncher `
+            --repoUrl https://github.com/LewisIsWorking/ClaudeDesktopLauncher `
             --token ${{ secrets.GITHUB_TOKEN }} `
             --publish `
-            --releaseName "ComeOnOver Desktop Launcher ${{ github.ref_name }}" `
+            --releaseName "Claude Desktop Launcher ${{ github.ref_name }}" `
             --tag ${{ github.ref_name }}
 
   build-linux:
@@ -127,7 +127,7 @@ jobs:
         # set from Windows due to <Compile Remove> on Win-only tests),
         # so any future cross-platform regression surfaces here rather
         # than only on Lewis's laptop.
-        run: dotnet test ComeOnOverDesktopLauncher.Tests/ComeOnOverDesktopLauncher.Tests.csproj --configuration Release
+        run: dotnet test ClaudeDesktopLauncher.Tests/ClaudeDesktopLauncher.Tests.csproj --configuration Release
 
       - name: Publish Linux x64 self-contained
         # Multi-file output (no PublishSingleFile) for the same reason
@@ -135,7 +135,7 @@ jobs:
         # cold start, and users can inspect/replace individual DLLs.
         # Self-contained so end users don't need .NET runtime installed.
         run: |
-          dotnet publish ComeOnOverDesktopLauncher/ComeOnOverDesktopLauncher.csproj \
+          dotnet publish ClaudeDesktopLauncher/ClaudeDesktopLauncher.csproj \
             --configuration Release \
             --runtime linux-x64 \
             --self-contained true \
@@ -149,13 +149,13 @@ jobs:
         # has bitten me before on stripped CI runners.
         run: |
           cat > publish-linux/README-LINUX.txt << 'EOF'
-          ComeOnOver Desktop Launcher - Linux build
+          Claude Desktop Launcher - Linux build
 
           This is a self-contained .NET 10 build for Linux x64. No
           runtime install required.
 
           To run:
-            ./ComeOnOverDesktopLauncher
+            ./ClaudeDesktopLauncher
 
           Tested on Ubuntu 24.04+ (kernel 6.x and newer). Wayland and
           X11 sessions are both supported via Avalonia's FreeDesktop
@@ -167,10 +167,10 @@ jobs:
             window control without a portal).
           - Auto-update is disabled; check GitHub Releases manually.
 
-          See https://github.com/LewisIsWorking/ComeOnOverDesktopLauncher
+          See https://github.com/LewisIsWorking/ClaudeDesktopLauncher
           for source, issues, and release notes.
           EOF
-          chmod +x publish-linux/ComeOnOverDesktopLauncher
+          chmod +x publish-linux/ClaudeDesktopLauncher
 
       - name: Create tarball
         # Excluding ".pdb" debug symbols shaves ~30 MB off the tarball
@@ -179,9 +179,9 @@ jobs:
         # users get a flat extract.
         run: |
           tar --exclude='*.pdb' -czf \
-            ComeOnOverDesktopLauncher-linux-x64.tar.gz \
+            ClaudeDesktopLauncher-linux-x64.tar.gz \
             -C publish-linux .
-          ls -lh ComeOnOverDesktopLauncher-linux-x64.tar.gz
+          ls -lh ClaudeDesktopLauncher-linux-x64.tar.gz
 
       - name: Upload Linux tarball to GitHub Release
         # --clobber overwrites any prior asset with the same name,
@@ -190,5 +190,5 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release upload "${{ github.ref_name }}" \
-            ComeOnOverDesktopLauncher-linux-x64.tar.gz \
+            ClaudeDesktopLauncher-linux-x64.tar.gz \
             --clobber --repo ${{ github.repository }}

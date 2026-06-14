@@ -1,0 +1,71 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ClaudeDesktopLauncher.ViewModels"
+        xmlns:controls="using:ClaudeDesktopLauncher.Views.Controls"
+        x:Class="ClaudeDesktopLauncher.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="Claude Desktop Launcher"
+        Icon="avares://ClaudeDesktopLauncher/Assets/appicon-256.png"
+        Width="1100" Height="700"
+        MinWidth="600" MinHeight="400"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <!-- Two-panel layout: launcher content + Claude usage dashboard.
+         Column/row definitions and Grid.Column/Row assignments are set
+         entirely in code-behind (MainWindow.axaml.cs) so the responsive
+         breakpoint (< 900px = vertical stack) and the UsagePanelOnLeft
+         toggle can both be applied without converters.
+         Added in v1.10.7. Refactored in v1.10.19+ to use a
+         ContentControl placeholder so the cross-platform XAML doesn't
+         reference Avalonia.Controls.WebView types (which only exist
+         on Windows). The actual WebView is added programmatically by
+         MainWindow.WebView.cs on Windows; on Linux the panel stays
+         empty (or shows a placeholder message in the future). -->
+    <Grid x:Name="MainGrid">
+
+        <!-- Left/top panel: existing launcher content -->
+        <ScrollViewer x:Name="LauncherPanel">
+            <StackPanel Margin="24" Spacing="14">
+
+                <TextBlock Text="Claude Desktop Launcher"
+                           FontSize="16" FontWeight="SemiBold"
+                           HorizontalAlignment="Center"/>
+
+                <controls:LaunchControlsPanel/>
+
+                <controls:ResourceTotalsRow x:Name="TotalsRow"/>
+
+                <controls:SlotInstanceList/>
+
+                <controls:TrayInstanceList/>
+
+                <controls:ExternalInstanceList/>
+
+                <TextBlock Text="{Binding FooterVersionText}"
+                           Foreground="Gray" FontSize="10"
+                           Opacity="0.5"
+                           HorizontalAlignment="Center"/>
+
+                <TextBlock Text="{Binding StatusMessage}"
+                           Foreground="Gray" FontSize="11"
+                           HorizontalAlignment="Center"/>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Divider: drag to resize. Right-click for position toggle. -->
+        <GridSplitter x:Name="PanelSplitter"
+                      Background="#2A2A2A"/>
+
+        <!-- Right/bottom panel: Claude usage dashboard host.
+             Filled with a NativeWebView on Windows by
+             MainWindow.WebView.cs; stays empty on Linux. -->
+        <ContentControl x:Name="UsagePanelHost"/>
+
+    </Grid>
+</Window>

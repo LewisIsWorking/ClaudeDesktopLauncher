@@ -1,4 +1,4 @@
-# ComeOnOver Desktop Launcher - Roadmap
+# Claude Desktop Launcher - Roadmap
 
 Current and upcoming work. Historical release notes:
 - [`docs/release-history/v1.0-v1.8.md`](docs/release-history/v1.0-v1.8.md) - foundation + UI maturity era
@@ -7,7 +7,7 @@ Current and upcoming work. Historical release notes:
 - [`docs/RELEASE-HISTORY.md`](docs/RELEASE-HISTORY.md) - index pointing at the above
 
 ## v1.10.21 - Released
-Linux MVP M4: GitHub Actions now produces a Linux x64 artifact alongside the existing Windows artifacts on every release. A new `build-linux` job runs after the Windows job (so it can append to the existing GitHub Release), runs the test suite on Ubuntu (catching cross-platform regressions in CI rather than only on Lewis's laptop), publishes a self-contained `linux-x64` build, tars it (excluding pdbs), and uploads `ComeOnOverDesktopLauncher-linux-x64.tar.gz` via `gh release upload`. Tarball is ~44 MB compressed, 224 files, valid ELF binary with executable bit preserved. Linux end-users now download a single file, `tar -xzf`, and `./ComeOnOverDesktopLauncher`.
+Linux MVP M4: GitHub Actions now produces a Linux x64 artifact alongside the existing Windows artifacts on every release. A new `build-linux` job runs after the Windows job (so it can append to the existing GitHub Release), runs the test suite on Ubuntu (catching cross-platform regressions in CI rather than only on Lewis's laptop), publishes a self-contained `linux-x64` build, tars it (excluding pdbs), and uploads `ClaudeDesktopLauncher-linux-x64.tar.gz` via `gh release upload`. Tarball is ~44 MB compressed, 224 files, valid ELF binary with executable bit preserved. Linux end-users now download a single file, `tar -xzf`, and `./ClaudeDesktopLauncher`.
 
 ### Why sequential not parallel
 The Windows job creates the GitHub Release via `vpk upload github --publish`. The Linux job uses `gh release upload --clobber` to append to it. If the jobs ran in parallel, the Linux upload could race the Windows release creation. Sequential gates this correctly and only costs ~2 extra minutes of wall time per release.
@@ -106,7 +106,7 @@ Adds a **Disk** column to the resource totals row showing the combined on-disk s
 - ClaudeDiskUsageService — enumerates %LOCALAPPDATA%\ClaudeSlot* directories recursively on a thread-pool thread. Has an internal testing seam constructor. Never throws — returns 0.0 on any failure.
 - MainWindowResourceViewModel.TotalDiskGb — new observable property. Refreshed asynchronously at construction and on every ManualRefresh() call. Updates via Dispatcher.UIThread.InvokeAsync so the background scan never touches the UI thread.
 - ResourceTotalsRow.axaml — new "Disk" column (GB, 1dp) with tooltip explaining the refresh cadence.
-- InternalsVisibleTo added to ComeOnOverDesktopLauncher.Core.csproj so the testing seam constructor is reachable from the Tests project.
+- InternalsVisibleTo added to ClaudeDesktopLauncher.Core.csproj so the testing seam constructor is reachable from the Tests project.
 
 ## v1.10.12 - Released
 Raises the slot count spinner maximum from 20 to 100. No technical upper limit exists on slot count; the only practical constraint is available RAM.
