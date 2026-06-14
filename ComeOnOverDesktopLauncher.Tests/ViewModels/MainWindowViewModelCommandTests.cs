@@ -6,7 +6,7 @@ namespace ComeOnOverDesktopLauncher.Tests.ViewModels;
 
 /// <summary>
 /// Tests for the RelayCommand-backed commands on <c>MainWindowViewModel</c>:
-/// Launch, Open ComeOnOver, Refresh resources, Save settings. Focuses on
+/// Launch, Refresh resources, Save settings. Focuses on
 /// delegating to the right service and updating observable state
 /// afterwards (status message, running count, totals). Error-path
 /// coverage for LaunchInstances lives here too so the status-message
@@ -62,21 +62,6 @@ public class MainWindowViewModelCommandTests
         sut.LaunchInstancesCommand.Execute(null);
 
         Assert.Contains("Error", sut.StatusMessage);
-    }
-
-    [Fact]
-    public void LaunchComeOnOverCommand_LaunchesCooService()
-    {
-        _f.CreateSut().LaunchComeOnOverCommand.Execute(null);
-        _f.CooService.Received(1).Launch();
-    }
-
-    [Fact]
-    public void LaunchComeOnOverCommand_UpdatesStatusMessage()
-    {
-        var sut = _f.CreateSut();
-        sut.LaunchComeOnOverCommand.Execute(null);
-        Assert.Contains("ComeOnOver", sut.StatusMessage);
     }
 
     [Fact]

@@ -22,7 +22,6 @@ public class MainWindowViewModelTestFixture
 {
     public IClaudeInstanceLauncher Launcher { get; } = Substitute.For<IClaudeInstanceLauncher>();
     public ISlotInitialiser SlotInitialiser { get; } = Substitute.For<ISlotInitialiser>();
-    public IComeOnOverAppService CooService { get; } = Substitute.For<IComeOnOverAppService>();
     public ISettingsService SettingsService { get; } = Substitute.For<ISettingsService>();
     public IClaudePathResolver PathResolver { get; } = Substitute.For<IClaudePathResolver>();
     public IResourceMonitor ResourceMonitor { get; } = Substitute.For<IResourceMonitor>();
@@ -62,7 +61,7 @@ public class MainWindowViewModelTestFixture
             Scanner, Classifier, ConfirmDialog, ProcessService, Logger);
 
         return new MainWindowViewModel(
-            Launcher, CooService,
+            Launcher,
             SettingsService, PathResolver, ResourceMonitor,
             StartupService, AutoUpdateService, ApplyFailureDetector, VersionProvider,
             ClaudeVersionResolver, ProcessService, ThumbnailService, PreviewService,

@@ -10,7 +10,7 @@ namespace ComeOnOverDesktopLauncher.ViewModels;
 /// <summary>
 /// Drives the main launcher window.
 /// Handles launching Claude instances, startup toggle, and the
-/// ComeOnOver/Logs commands.
+/// Logs command.
 ///
 /// <para>
 /// Delegates per-concern state to four sub-VMs so this root stays
@@ -26,7 +26,6 @@ namespace ComeOnOverDesktopLauncher.ViewModels;
 public partial class MainWindowViewModel : ObservableObject
 {
     private readonly IClaudeInstanceLauncher _launcher;
-    private readonly IComeOnOverAppService _cooService;
     private readonly ISettingsService _settingsService;
     private readonly IStartupService _startupService;
     private readonly IProcessService _processService;
@@ -69,7 +68,6 @@ public partial class MainWindowViewModel : ObservableObject
 
     public MainWindowViewModel(
         IClaudeInstanceLauncher launcher,
-        IComeOnOverAppService cooService,
         ISettingsService settingsService,
         IClaudePathResolver pathResolver,
         IResourceMonitor resourceMonitor,
@@ -89,7 +87,6 @@ public partial class MainWindowViewModel : ObservableObject
         ILoggingService logger)
     {
         _launcher = launcher;
-        _cooService = cooService;
         _settingsService = settingsService;
         _startupService = startupService;
         _processService = processService;
@@ -166,13 +163,6 @@ public partial class MainWindowViewModel : ObservableObject
             _logger.LogError("LaunchInstances failed", ex);
             StatusMessage = $"Error: {ex.Message}";
         }
-    }
-
-    [RelayCommand]
-    private void LaunchComeOnOver()
-    {
-        _cooService.Launch();
-        StatusMessage = "ComeOnOver opened.";
     }
 
     [RelayCommand]

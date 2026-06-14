@@ -33,11 +33,6 @@
 
                 <controls:LaunchControlsPanel/>
 
-                <Button Content="Open ComeOnOver"
-                        Command="{Binding LaunchComeOnOverCommand}"
-                        HorizontalAlignment="Stretch"
-                        HorizontalContentAlignment="Center"/>
-
                 <controls:ResourceTotalsRow x:Name="TotalsRow"/>
 
                 <controls:SlotInstanceList/>

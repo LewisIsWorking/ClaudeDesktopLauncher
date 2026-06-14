@@ -11,8 +11,7 @@ namespace ComeOnOverDesktopLauncher.Core.Services;
 ///
 /// <para>
 /// <see cref="Start"/> performs a fire-and-forget launch without stream
-/// redirection, used by <see cref="ComeOnOverAppService"/> to open URLs
-/// via the default browser.
+/// redirection (e.g. opening a folder or URL via the shell).
 /// </para>
 ///
 /// <para>
