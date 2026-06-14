@@ -1,0 +1,120 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ClaudeDesktopLauncher.ViewModels"
+             x:Class="ClaudeDesktopLauncher.Views.Controls.SlotCard"
+             x:DataType="vm:ClaudeInstanceViewModel">
+
+    <Design.DataContext>
+        <vm:ClaudeInstanceViewModel/>
+    </Design.DataContext>
+
+    <!-- Single card for a launcher-managed slot. Used inside the
+         WrapPanel grid in SlotInstanceList.axaml. Card width is fixed
+         at 256px so the grid tiles cleanly to 2 columns on a 440-600px
+         window and 1 column when narrower. -->
+    <Border Width="256"
+            Margin="4"
+            Padding="8"
+            BorderBrush="#333"
+            BorderThickness="1"
+            CornerRadius="4"
+            Background="#1A1A1A">
+        <StackPanel Spacing="8">
+
+            <!-- Thumbnail: 240x150 target, fit preserving aspect.
+                 Click/tap opens the lightbox preview window. The hand
+                 cursor + tooltip make the interaction discoverable. -->
+            <Border Height="150"
+                    Background="#0D0D0D"
+                    BorderBrush="#222"
+                    BorderThickness="1"
+                    CornerRadius="3"
+                    Cursor="Hand"
+                    PointerPressed="OnThumbnailPressed"
+                    ToolTip.Tip="Click to enlarge. Refreshes on every poll tick. Toggle off via 'Show thumbnails' in the controls panel.">
+                <Image Source="{Binding Thumbnail}"
+                       Stretch="Uniform"
+                       IsHitTestVisible="False"/>
+            </Border>
+
+            <!-- Slot + login pills row -->
+            <StackPanel Orientation="Horizontal" Spacing="6">
+                <Border Background="#3A3A3A" CornerRadius="3" Padding="6,2"
+                        VerticalAlignment="Center"
+                        ToolTip.Tip="This is the ClaudeSlotN data directory the instance is using.">
+                    <TextBlock Text="{Binding InstanceNumber, StringFormat='Slot {0}'}"
+                               FontSize="9"
+                               FontWeight="SemiBold"
+                               Foreground="#DADADA"/>
+                </Border>
+                <Border CornerRadius="3" Padding="5,2"
+                        Background="{Binding LoginStatusBackground}"
+                        ToolTip.Tip="{Binding LoginStatusTooltip}">
+                    <TextBlock Text="{Binding LoginStatusText}"
+                               FontSize="9"
+                               FontWeight="SemiBold"
+                               Foreground="{Binding LoginStatusForeground}"/>
+                </Border>
+            </StackPanel>
+
+            <!-- Nickname (editable) -->
+            <TextBox Text="{Binding SlotName}"
+                     FontSize="13" FontWeight="SemiBold"
+                     BorderThickness="0"
+                     Background="Transparent"
+                     Padding="0,2"
+                     PlaceholderText="Name this slot..."/>
+
+            <!-- Stats row: CPU, RAM, Uptime, Hide, Kill. -->
+            <Grid ColumnDefinitions="*,*,*,Auto,Auto">
+                <StackPanel Grid.Column="0" HorizontalAlignment="Center">
+                    <TextBlock Text="CPU" FontSize="9" Foreground="Gray"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding CpuPercent, StringFormat='{}{0}%'}"
+                               FontSize="11" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                    <TextBlock Text="RAM" FontSize="9" Foreground="Gray"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding RamMb, StringFormat='{}{0} MB'}"
+                               FontSize="11" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2" HorizontalAlignment="Center">
+                    <TextBlock Text="Up" FontSize="9" Foreground="Gray"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding UptimeDisplay}"
+                               FontSize="11" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <Button Grid.Column="3"
+                        Content="Hide"
+                        Command="{Binding HideCommand}"
+                        Foreground="#A0A0A0"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        FontSize="11"
+                        Padding="8,2"
+                        ToolTip.Tip="Hide this Claude window to the system tray without terminating it. The slot keeps running (MCP connections stay alive) and will reappear in the 'Hidden / tray' section. Reopen it via Claude's own tray icon."/>
+                <Button Grid.Column="4"
+                        Content="X"
+                        Command="{Binding KillCommand}"
+                        Foreground="#EF9A9A"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        FontSize="12"
+                        FontWeight="SemiBold"
+                        Padding="8,2"
+                        ToolTip.Tip="Close this Claude instance"/>
+            </Grid>
+
+            <!-- Activity signal: last time this slot's CPU cleared the
+                 activity threshold (3%). Updated every poll tick.
+                 Shows "Idle" until the first spike is observed. -->
+            <TextBlock Text="{Binding LastActiveDisplay}"
+                       FontSize="9"
+                       Foreground="#555"
+                       HorizontalAlignment="Center"
+                       ToolTip.Tip="Last time this slot was actively processing (CPU above 3%). Updated every poll tick."/>
+
+        </StackPanel>
+    </Border>
+</UserControl>

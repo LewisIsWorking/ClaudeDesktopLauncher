@@ -151,5 +151,5 @@ suppressed - they are *routed* to a location we control, leaving the
 original stderr stream clear for future tooling and production runs
 silent as users expect.
 
-See `ComeOnOverDesktopLauncher.Core/Services/SystemProcessService.cs`
+See `ClaudeDesktopLauncher.Core/Services/SystemProcessService.cs`
 and `ClaudeInstanceLauncher.LaunchSlot` for the implementation.

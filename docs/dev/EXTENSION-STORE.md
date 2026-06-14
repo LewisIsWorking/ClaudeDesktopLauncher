@@ -31,7 +31,7 @@ Of which only ~300 MB is unique extension payload; the rest is duplication. Inst
 A single shared store at:
 
 ```
-%LOCALAPPDATA%\ComeOnOverDesktopLauncher\ExtensionStore\<ext-id>\
+%LOCALAPPDATA%\ClaudeDesktopLauncher\ExtensionStore\<ext-id>\
 ```
 
 With per-slot junction points (Windows reparse points, NTFS-native, no admin needed) replacing each slot's extension directory:

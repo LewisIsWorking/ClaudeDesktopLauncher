@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ClaudeDesktopLauncher.ViewModels"
+             xmlns:controls="using:ClaudeDesktopLauncher.Views.Controls"
+             x:Class="ClaudeDesktopLauncher.Views.Controls.SlotInstanceList"
+             x:DataType="vm:MainWindowViewModel">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <!-- v1.9.1: migrated from row template to a WrapPanel grid of
+         256-wide SlotCard controls. On default window widths this
+         naturally tiles to 2 columns; it collapses to 1 column when
+         the user narrows the window. -->
+    <ItemsControl ItemsSource="{Binding SlotInstances.Items}"
+                  IsVisible="{Binding Resources.HasRunningInstances}">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <WrapPanel Orientation="Horizontal"/>
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="vm:ClaudeInstanceViewModel">
+                <controls:SlotCard/>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
+</UserControl>

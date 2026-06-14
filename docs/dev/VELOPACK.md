@@ -16,7 +16,7 @@ For iterating on the install flow locally without pushing a tag:
 # From repo root
 Remove-Item -Recurse -Force publish, Releases -ErrorAction SilentlyContinue
 
-dotnet publish ComeOnOverDesktopLauncher\ComeOnOverDesktopLauncher.csproj `
+dotnet publish ClaudeDesktopLauncher\ClaudeDesktopLauncher.csproj `
     --configuration Release `
     --runtime win-x64 `
     --self-contained true `
@@ -24,19 +24,19 @@ dotnet publish ComeOnOverDesktopLauncher\ComeOnOverDesktopLauncher.csproj `
     -p:PublishSingleFile=false
 
 vpk pack `
-    --packId ComeOnOverDesktopLauncher `
+    --packId ClaudeDesktopLauncher `
     --packVersion 1.10.0-test `
     --packDir publish `
-    --mainExe ComeOnOverDesktopLauncher.exe `
-    --packTitle "ComeOnOver Desktop Launcher" `
+    --mainExe ClaudeDesktopLauncher.exe `
+    --packTitle "Claude Desktop Launcher" `
     --shortcuts "Desktop,StartMenu"
 ```
 
 Output appears in `Releases/`. Key files:
-- `ComeOnOverDesktopLauncher-win-Setup.exe` - bootstrap installer for end users
-- `ComeOnOverDesktopLauncher-{version}-full.nupkg` - full Velopack update package
-- `ComeOnOverDesktopLauncher-{version}-delta.nupkg` - delta from previous version (only from v1.10.1 onwards)
-- `ComeOnOverDesktopLauncher-win-Portable.zip` - bonus portable variant
+- `ClaudeDesktopLauncher-win-Setup.exe` - bootstrap installer for end users
+- `ClaudeDesktopLauncher-{version}-full.nupkg` - full Velopack update package
+- `ClaudeDesktopLauncher-{version}-delta.nupkg` - delta from previous version (only from v1.10.1 onwards)
+- `ClaudeDesktopLauncher-win-Portable.zip` - bonus portable variant
 - `RELEASES`, `releases.win.json`, `assets.win.json` - Velopack manifests
 
 Both `publish/` and `Releases/` are `.gitignore`d.
@@ -64,7 +64,7 @@ Because the auto-update flow requires TWO published releases (the old one must a
 4. Wait up to 6 hours (the poll interval) or restart the launcher to trigger the check.
 5. Confirm the "Restart to install v1.10.1" banner appears, click it, verify the new version launches.
 
-If any step fails, logs at `%APPDATA%\ComeOnOverDesktopLauncher\logs\launcher-YYYY-MM-DD.log` will show every `[Show]`, `[OpenWindow]`, `CheckForUpdatesAsync`, and Velopack-emitted entry.
+If any step fails, logs at `%APPDATA%\ClaudeDesktopLauncher\logs\launcher-YYYY-MM-DD.log` will show every `[Show]`, `[OpenWindow]`, `CheckForUpdatesAsync`, and Velopack-emitted entry.
 
 ### Why fetch-depth: 0 in the workflow
 
@@ -96,7 +96,7 @@ Fix: add a `vpk download github` step BEFORE `vpk pack`:
 - name: Download previous release for delta generation
   run: |
     vpk download github `
-      --repoUrl https://github.com/LewisIsWorking/ComeOnOverDesktopLauncher `
+      --repoUrl https://github.com/LewisIsWorking/ClaudeDesktopLauncher `
       --token ${{ secrets.GITHUB_TOKEN }}
   continue-on-error: true  # first-ever release has nothing to download
 ```
@@ -110,18 +110,18 @@ Auto-update still works without deltas; clients just download the full `.nupkg` 
 Observed on 2026-04-20 during v1.10.0 → v1.10.1 auto-update on the first real-world install. Velopack's install step correctly created the Start Menu `.lnk`. During the update apply step, Velopack's log said:
 
 ```
-[INFO] Will update all current shortcuts: [..., (START_MENU, ...\ComeOnOver Desktop Launcher.lnk)]
-[INFO] Updating existing shortcut '...\Start Menu\...\ComeOnOver Desktop Launcher.lnk' (START_MENU)
+[INFO] Will update all current shortcuts: [..., (START_MENU, ...\Claude Desktop Launcher.lnk)]
+[INFO] Updating existing shortcut '...\Start Menu\...\Claude Desktop Launcher.lnk' (START_MENU)
 [INFO] Package applied successfully.
 ```
 
-But after apply, the `.lnk` was gone. The parent folder (`...\Start Menu\Programs\ComeOnOverDesktopLauncher\`) remained, just empty. Desktop shortcut survived fine. This means: Windows Search cannot find the app, the user cannot launch via Start Menu.
+But after apply, the `.lnk` was gone. The parent folder (`...\Start Menu\Programs\ClaudeDesktopLauncher\`) remained, just empty. Desktop shortcut survived fine. This means: Windows Search cannot find the app, the user cannot launch via Start Menu.
 
 **User-facing workaround** (one-liner, no admin needed):
 
 ```powershell
-$exe = "$env:LOCALAPPDATA\ComeOnOverDesktopLauncher\current\ComeOnOverDesktopLauncher.exe"
-$lnk = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\ComeOnOverDesktopLauncher\ComeOnOver Desktop Launcher.lnk"
+$exe = "$env:LOCALAPPDATA\ClaudeDesktopLauncher\current\ClaudeDesktopLauncher.exe"
+$lnk = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\ClaudeDesktopLauncher\Claude Desktop Launcher.lnk"
 $sh = New-Object -ComObject WScript.Shell
 $s = $sh.CreateShortcut($lnk)
 $s.TargetPath = $exe

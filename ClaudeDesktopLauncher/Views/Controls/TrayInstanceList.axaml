@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ClaudeDesktopLauncher.ViewModels"
+             xmlns:controls="using:ClaudeDesktopLauncher.Views.Controls"
+             x:Class="ClaudeDesktopLauncher.Views.Controls.TrayInstanceList"
+             x:DataType="vm:MainWindowViewModel">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <!-- v1.9.1: migrated from row template to a WrapPanel grid of
+         TrayCard controls. TrayCard mirrors SlotCard with a "Hidden"
+         overlay badge, reduced-opacity thumbnail, read-only italic
+         nickname, and a "Quit" (not "X") action. -->
+    <Border IsVisible="{Binding SlotInstances.HasTrayItems}"
+            BorderThickness="0,1,0,0" BorderBrush="#444"
+            Margin="0,10,0,0" Padding="0,10,0,0">
+        <StackPanel Spacing="8">
+
+            <TextBlock Text="Hidden / tray"
+                       FontSize="11" FontWeight="SemiBold"
+                       Foreground="Gray"
+                       ToolTip.Tip="Launcher-managed Claude slots that have been closed to the system tray. The process is still running (and counts toward Total RAM) but the window is not visible. Use the tray icon menu or reopen the slot from the launcher to bring it back."/>
+
+            <ItemsControl ItemsSource="{Binding SlotInstances.TrayItems}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="vm:ClaudeInstanceViewModel">
+                        <controls:TrayCard/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </Border>
+</UserControl>

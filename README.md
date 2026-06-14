@@ -1,8 +1,8 @@
-# ComeOnOver Desktop Launcher
+# Claude Desktop Launcher
 
 Run multiple isolated Claude AI instances side by side on Windows. Each slot has its own login session, extensions, and MCP connections — switch between work, personal, and research contexts without losing state.
 
-![ComeOnOver Desktop Launcher](docs/screenshots/1.10.11.jpg)
+![Claude Desktop Launcher](docs/screenshots/1.10.11.jpg)
 
 ## Features
 
@@ -42,30 +42,30 @@ Run multiple isolated Claude AI instances side by side on Windows. Each slot has
 
 ## Install
 
-Download the latest `ComeOnOverDesktopLauncher-win-Setup.exe` from [Releases](https://github.com/LewisIsWorking/ComeOnOverDesktopLauncher/releases) and run it.
+Download the latest `ClaudeDesktopLauncher-win-Setup.exe` from [Releases](https://github.com/LewisIsWorking/ClaudeDesktopLauncher/releases) and run it.
 
-The installer puts the launcher in `%LOCALAPPDATA%\ComeOnOverDesktopLauncher\` (no UAC prompt) and creates a Desktop shortcut and Start Menu entry.
+The installer puts the launcher in `%LOCALAPPDATA%\ClaudeDesktopLauncher\` (no UAC prompt) and creates a Desktop shortcut and Start Menu entry.
 
 **SmartScreen warning.** Because the installer isn't code-signed yet, Windows shows a "Windows protected your PC" dialog on first run. Click **More info → Run anyway**. This is a one-time prompt; subsequent auto-updates don't re-trigger it. Code signing is on the roadmap.
 
-**Portable install.** Each release also ships `ComeOnOverDesktopLauncher-win-Portable.zip` — extract and run directly. The portable version does not auto-update.
+**Portable install.** Each release also ships `ClaudeDesktopLauncher-win-Portable.zip` — extract and run directly. The portable version does not auto-update.
 
 **Upgrading from v1.9.x or earlier?** See [`docs/MIGRATION.md`](docs/MIGRATION.md) for a one-time migration from the old portable `.exe` to the installer-based distribution.
 
 ## Getting started (from source)
 
 ```
-git clone https://github.com/LewisIsWorking/ComeOnOverDesktopLauncher
+git clone https://github.com/LewisIsWorking/ClaudeDesktopLauncher
 ```
 
-Open `ComeOnOverDesktopLauncher.sln` in Rider or Visual Studio, then build and run `ComeOnOverDesktopLauncher`.
+Open `ClaudeDesktopLauncher.sln` in Rider or Visual Studio, then build and run `ClaudeDesktopLauncher`.
 
 ## Project structure
 
 ```
-ComeOnOverDesktopLauncher/          # Avalonia UI — views, view models, DI wiring
-ComeOnOverDesktopLauncher.Core/     # Business logic — models, services, interfaces
-ComeOnOverDesktopLauncher.Tests/    # xUnit test suite
+ClaudeDesktopLauncher/          # Avalonia UI — views, view models, DI wiring
+ClaudeDesktopLauncher.Core/     # Business logic — models, services, interfaces
+ClaudeDesktopLauncher.Tests/    # xUnit test suite
 ```
 
 ## Tech stack
