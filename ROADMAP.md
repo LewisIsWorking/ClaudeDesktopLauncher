@@ -1,4 +1,4 @@
-# ComeOnOver Desktop Launcher - Roadmap
+# Claude Desktop Launcher - Roadmap
 
 Current and upcoming work. Historical release notes:
 - [`docs/release-history/v1.0-v1.8.md`](docs/release-history/v1.0-v1.8.md) - foundation + UI maturity era
@@ -51,7 +51,7 @@ Adds a **Disk** column to the resource totals row showing the combined on-disk s
 - ClaudeDiskUsageService — enumerates %LOCALAPPDATA%\ClaudeSlot* directories recursively on a thread-pool thread. Has an internal testing seam constructor. Never throws — returns 0.0 on any failure.
 - MainWindowResourceViewModel.TotalDiskGb — new observable property. Refreshed asynchronously at construction and on every ManualRefresh() call. Updates via Dispatcher.UIThread.InvokeAsync so the background scan never touches the UI thread.
 - ResourceTotalsRow.axaml — new "Disk" column (GB, 1dp) with tooltip explaining the refresh cadence.
-- InternalsVisibleTo added to ComeOnOverDesktopLauncher.Core.csproj so the testing seam constructor is reachable from the Tests project.
+- InternalsVisibleTo added to ClaudeDesktopLauncher.Core.csproj so the testing seam constructor is reachable from the Tests project.
 
 ## v1.10.12 - Released
 Raises the slot count spinner maximum from 20 to 100. No technical upper limit exists on slot count; the only practical constraint is available RAM.
@@ -69,7 +69,7 @@ Adds a per-slot activity signal to each slot card — "Active now", "Active Xm a
 
 ### Backlog closures
 - **Per-slot activity preview** — closed as shipped. Thumbnails landed in v1.9.x; last-active timestamp lands here.
-- **Submit to awesome-avalonia** — PR opened to AvaloniaCommunity/awesome-avalonia adding ComeOnOver Desktop Launcher to the Open Source Applications section.
+- **Submit to awesome-avalonia** — PR opened to AvaloniaCommunity/awesome-avalonia adding Claude Desktop Launcher to the Open Source Applications section.
 
 ## v1.10.9 - Released
 Per-slot RAM and CPU totals now match Windows Task Manager by aggregating the full Electron process tree (renderer, GPU, crashpad, network service, node-service) into each slot card. Also ships a large test health pass: 57 new tests across 7 new files, covering tree analysis, child-snapshot aggregation, resource monitor CPU delta, thumbnail refresher, slot callback binder, update orchestrator, and banner text formatting.

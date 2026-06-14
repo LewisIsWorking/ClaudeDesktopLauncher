@@ -19,7 +19,7 @@ The hook is not auto-installed by git on clone ÔÇö it lives in `docs/dev/hook
 Run this any time you suspect drift. It's also what the CI guard (`FileSizeLimitTests`) checks:
 
 ```powershell
-$root = "$env:USERPROFILE\RiderProjects\ComeOnOverDesktopLauncher"
+$root = "$env:USERPROFILE\RiderProjects\ClaudeDesktopLauncher"
 Get-ChildItem -Path $root -Recurse -File -Include *.cs, *.axaml, *.md |
     Where-Object { $_.FullName -notmatch "\\(bin|obj|TestResults|\.git|node_modules)\\" } |
     ForEach-Object {
@@ -36,11 +36,11 @@ Do NOT use `Measure-Object -Line` — it undercounts on files with the final new
 ## Kill the running launcher before rebuilding
 
 ```powershell
-Get-Process -Name "ComeOnOverDesktopLauncher" -ErrorAction SilentlyContinue | Stop-Process -Force
+Get-Process -Name "ClaudeDesktopLauncher" -ErrorAction SilentlyContinue | Stop-Process -Force
 Start-Sleep -Milliseconds 500
 ```
 
-If the launcher is running, `dotnet build` fails with `MSB3027: The file is locked by: "ComeOnOverDesktopLauncher (PID)"` because msbuild can't overwrite the DLL. Always kill before building after a live-run session.
+If the launcher is running, `dotnet build` fails with `MSB3027: The file is locked by: "ClaudeDesktopLauncher (PID)"` because msbuild can't overwrite the DLL. Always kill before building after a live-run session.
 
 ## PowerShell / heredoc quirks in this codebase
 
@@ -51,7 +51,7 @@ If the launcher is running, `dotnet build` fails with `MSB3027: The file is lock
 
 ## Working directory drift
 
-Some `start_process` / `bash` calls spawn a subshell with `bin/Debug/` as the cwd (because the last process the current shell ran was in that directory). Always start commands with an explicit `Set-Location` or `cd` to the repo root. Symptom is `ReadAllLines` with paths like `bin\Debug\net10.0\ComeOnOverDesktopLauncher.Core\...`.
+Some `start_process` / `bash` calls spawn a subshell with `bin/Debug/` as the cwd (because the last process the current shell ran was in that directory). Always start commands with an explicit `Set-Location` or `cd` to the repo root. Symptom is `ReadAllLines` with paths like `bin\Debug\net10.0\ClaudeDesktopLauncher.Core\...`.
 
 ## CI runner gotchas
 

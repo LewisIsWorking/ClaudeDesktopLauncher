@@ -27,7 +27,7 @@ These come from the project owner and are non-negotiable:
 ## CoODL architecture invariants
 
 - `MainWindowViewModel` depends only on `I<Service>` abstractions. No direct WMI / filesystem / registry calls.
-- Core layer (`ComeOnOverDesktopLauncher.Core`) has zero Avalonia references. Keep UI out of Core. The only exception is that Core services can return raw bytes (e.g. `byte[]?` for thumbnails) and the UI layer materialises them into Avalonia types.
+- Core layer (`ClaudeDesktopLauncher.Core`) has zero Avalonia references. Keep UI out of Core. The only exception is that Core services can return raw bytes (e.g. `byte[]?` for thumbnails) and the UI layer materialises them into Avalonia types.
 - Every service has an `I<Service>` interface in `Services/Interfaces/` and a concrete implementation in `Services/`.
 - List VMs own reconciliation — they mutate their `ObservableCollection` in place, never reassign. Preserves Avalonia binding identity so row state (edit-in-progress text) survives refreshes.
 - Reconciliation is identity-preserving: match by stable key (slot number for slots, PID for externals), update in place, add missing, remove gone. Never clear-and-repopulate.
@@ -50,7 +50,7 @@ Investigated 2026-04-22 during the shared extension store design. **Do not re-in
 ## Diagnostic honesty — lessons from the 2026-04-20 update-failure investigation
 
 - **"Transient" is a conclusion, not an opening hypothesis.** Cheap diagnostics FIRST: read the relevant log, run `handle64.exe`, check process trees. A retry without evidence wastes the user's time. Two consecutive failures with identical symptoms = reproducible bug, not flake.
-- **Dev builds can impersonate the installed version.** A `dotnet run` produces an .exe showing the same version footer as the Velopack build. ONLY check via `Get-Process ComeOnOverDesktopLauncher | Select-Object Path` and `GetLastWriteTime` on the installed exe. Kill stray dev builds before diagnostic work.
+- **Dev builds can impersonate the installed version.** A `dotnet run` produces an .exe showing the same version footer as the Velopack build. ONLY check via `Get-Process ClaudeDesktopLauncher | Select-Object Path` and `GetLastWriteTime` on the installed exe. Kill stray dev builds before diagnostic work.
 - **Velopack silently relaunches the old version on apply failure.** When apply fails, Velopack logs `[ERROR] Apply error:` to `velopack.log` and relaunches the original exe. No C# exception is thrown. The only signal is the log. Detection pattern lives in `IUpdateApplyFailureDetector` (v1.10.4+).
 - **"Continue" isn't always the right response to a stuck investigation.** Stop after the second identical failure and write a plan. Signs to stop: repeated same-symptom failures; speculating instead of measuring; running low on tokens while still flailing.
 
@@ -61,8 +61,8 @@ Added in v1.10.7. Package: `Avalonia.Controls.WebView 12.0.0`. `NativeWebView` i
 
 - The user runs the CoODL launcher on Windows (Dell laptop is Linux but not the target).
 - ClaudeSlot{N} data directories live at `%LOCALAPPDATA%\ClaudeSlot{N}\`.
-- Seed cache is at `%APPDATA%\ComeOnOverDesktopLauncher\seed\`.
-- Logs are at `%APPDATA%\ComeOnOverDesktopLauncher\logs\launcher-YYYY-MM-DD.log`.
+- Seed cache is at `%APPDATA%\ClaudeDesktopLauncher\seed\`.
+- Logs are at `%APPDATA%\ClaudeDesktopLauncher\logs\launcher-YYYY-MM-DD.log`.
 - User's Windows GitHub Desktop is the shiftkey fork v3.4.12-linux1.
 - AutoHotkey v2 script at `%USERPROFILE%\Documents\AutoHotkey\Continue.ahk`.
 - The user has a multi-monitor setup. Primary monitor is 2560x1440. Prefer `Windows-MCP:Click` tool for automated clicks (handles DPI correctly).
@@ -71,9 +71,9 @@ Added in v1.10.7. Package: `Avalonia.Controls.WebView 12.0.0`. `NativeWebView` i
 
 Added in v1.10.17. The Avalonia.Controls.WebView 12.0.0 package has a known crash where `CoreWebView2Controller.MoveFocus` throws `System.ArgumentException` (HRESULT 0x80070057) when the underlying WebView2 is in a transient state during window activation. The exception bubbles from `NativeWebView.OnGotFocus` -> `WindowBase.HandleActivated` -> Win32 `WndProc` and kills the process because no Avalonia layer catches it.
 
-**Fix**: `App.OnFrameworkInitializationCompleted` calls `HookGlobalExceptionHandlers()` which subscribes to `Dispatcher.UIThread.UnhandledException`, logs the exception, and sets `e.Handled = true`. The launcher survives the crash and the user keeps working. Every swallowed exception is logged so real bugs remain discoverable in `%APPDATA%\ComeOnOverDesktopLauncher\logs\`.
+**Fix**: `App.OnFrameworkInitializationCompleted` calls `HookGlobalExceptionHandlers()` which subscribes to `Dispatcher.UIThread.UnhandledException`, logs the exception, and sets `e.Handled = true`. The launcher survives the crash and the user keeps working. Every swallowed exception is logged so real bugs remain discoverable in `%APPDATA%\ClaudeDesktopLauncher\logs\`.
 
-**Diagnostic pattern**: when the launcher dies abruptly with no stack in the launcher log, check the Windows Application event log for `ComeOnOverDesktopLauncher.exe` faulting application entries - the .NET Runtime usually logs the unhandled exception there before the process exits.
+**Diagnostic pattern**: when the launcher dies abruptly with no stack in the launcher log, check the Windows Application event log for `ClaudeDesktopLauncher.exe` faulting application entries - the .NET Runtime usually logs the unhandled exception there before the process exits.
 
 ## WndProc-synchronous exceptions bypass Dispatcher.UnhandledException
 
