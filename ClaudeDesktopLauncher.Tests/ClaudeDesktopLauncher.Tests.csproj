@@ -30,6 +30,11 @@
         <!-- ClaudePathResolver is the Windows-only path resolver
              (excluded from Linux production build); its tests follow. -->
         <Compile Remove="Services\ClaudePathResolverTests.cs" />
+        <!-- ClaudeProcessWmiQuery is excluded from the Linux Core build
+             (System.Management), so its tests go with it. -->
+        <Compile Remove="Services\ClaudeProcessWmiQueryTests.cs" />
+        <Compile Remove="Services\ClaudeProcessWmiQueryEdgeTests.cs" />
+        <Compile Remove="Services\ClaudeProcessWmiQueryTestSource.cs" />
     </ItemGroup>
 
     <ItemGroup>

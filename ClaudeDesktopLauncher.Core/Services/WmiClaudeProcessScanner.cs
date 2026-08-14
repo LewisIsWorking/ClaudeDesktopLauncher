@@ -51,6 +51,10 @@ public class WmiClaudeProcessScanner : IClaudeProcessScanner
 
     private readonly ILoggingService _logger;
 
+    // Instance state, not static: it caches command lines across polls, and the scanner is
+    // registered as a singleton so the cache lives exactly as long as it should.
+    private readonly ClaudeProcessWmiQuery _wmi = new();
+
     public WmiClaudeProcessScanner(ILoggingService logger)
     {
         _logger = logger;
@@ -58,7 +62,7 @@ public class WmiClaudeProcessScanner : IClaudeProcessScanner
 
     public IReadOnlyList<ClaudeProcessInfo> Scan()
     {
-        var all = QueryAllClaudeProcesses();
+        var all = _wmi.QueryClaudeProcesses();
         if (all.Count == 0) return Array.Empty<ClaudeProcessInfo>();
 
         var mainPids = ClaudeProcessMainIdentifier.IdentifyMainPids(
@@ -111,30 +115,6 @@ public class WmiClaudeProcessScanner : IClaudeProcessScanner
         }
     }
 
-    private static List<ProcessRecord> QueryAllClaudeProcesses()
-    {
-        var results = new List<ProcessRecord>();
-        using var searcher = new ManagementObjectSearcher(
-            "SELECT ProcessId, ParentProcessId, CommandLine FROM Win32_Process WHERE Name = 'claude.exe'");
-        foreach (var obj in searcher.Get())
-        {
-            using var mo = obj;
-            var pid = Convert.ToInt32(mo["ProcessId"]);
-            var ppid = mo["ParentProcessId"] is null ? 0 : Convert.ToInt32(mo["ParentProcessId"]);
-            var cmd = mo["CommandLine"] as string ?? string.Empty;
-            results.Add(new ProcessRecord(pid, ppid, cmd));
-        }
-        return results;
-    }
-
-    /// <summary>
-    /// Returns <paramref name="main"/>.CommandLine if it already carries
-    /// a <c>--user-data-dir</c> flag; otherwise synthesises a minimal
-    /// cmdline by appending the flag extracted from one of the main's
-    /// direct children. If no child carries the flag either, the original
-    /// cmdline is returned unchanged (classification will simply treat
-    /// the process as external).
-    /// </summary>
     private static string EnrichWithUserDataDir(
         ProcessRecord main,
         IReadOnlyDictionary<int, IReadOnlyList<ProcessRecord>> childrenByParent)
@@ -195,5 +175,4 @@ public class WmiClaudeProcessScanner : IClaudeProcessScanner
         }
     }
 
-    private record ProcessRecord(int Pid, int ParentPid, string CommandLine);
 }
