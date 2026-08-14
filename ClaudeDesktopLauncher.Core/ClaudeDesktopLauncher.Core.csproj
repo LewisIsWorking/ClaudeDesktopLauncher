@@ -26,6 +26,13 @@
          Linux build; its name is historical, not platform-bound. -->
     <ItemGroup Condition="'$(OS)' != 'Windows_NT'">
         <Compile Remove="Services\WmiClaudeProcessScanner.cs" />
+        <!-- 2026-08-14: these two were extracted OUT of WmiClaudeProcessScanner.cs and inherited its
+             System.Management dependency without inheriting its exclusion. Splitting a file splits
+             nothing else - the csproj still names the old path, and the Linux build breaks on a
+             package that is only referenced on Windows. Nothing on this machine builds for Linux, so
+             the failure would have surfaced in CI, far from the change that caused it. -->
+        <Compile Remove="Services\ClaudeProcessSources.cs" />
+        <Compile Remove="Services\ClaudeProcessWmiQuery.cs" />
         <Compile Remove="Services\PrintWindowThumbnailService.cs" />
         <Compile Remove="Services\WindowsRegistryService.cs" />
         <!-- ClaudePathResolver hard-codes C:\Program Files\WindowsApps
