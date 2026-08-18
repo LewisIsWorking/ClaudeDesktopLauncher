@@ -1,5 +1,20 @@
 # Claude Desktop Launcher
 
+## Open Source Maintenance Fee
+
+This project requires an [Open Source Maintenance Fee](https://opensourcemaintenancefee.org/) from
+organisations that use the **official binary release** as part of revenue-generating activity and
+have annual gross revenue of **US$10,000 or more**.
+
+- The **source stays free** under this repository's LICENSE. The fee is not a licence fee.
+- **Self-compiled binaries are exempt.** You may always build from source under the LICENSE.
+- Organisations under US$10,000 annual gross revenue are **exempt**.
+- Individuals, hobbyists and personal use are **exempt**.
+- Issues, discussions and pull requests stay **open to everyone**, fee or not.
+
+Pay the fee via [GitHub Sponsors](https://github.com/sponsors/LewisIsWorking) at the
+**Maintenance Fee** tier. Full terms: [OSMFEULA.txt](OSMFEULA.txt).
+
 Run multiple isolated Claude AI instances side by side on Windows. Each slot has its own login session, extensions, and MCP connections — switch between work, personal, and research contexts without losing state.
 
 ![Claude Desktop Launcher](docs/screenshots/1.10.11.jpg)
